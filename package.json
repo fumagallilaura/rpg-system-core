@@ -1,0 +1,33 @@
+{
+  "name": "@fumagallilaura/rpg-system-core",
+  "version": "0.1.0",
+  "description": "Pacote com os tipos, interfaces e contratos compartilhados para o ecossistema RPG System.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fumagallilaura/rpg-system-core.git"
+  },
+  "keywords": [
+    "rpg",
+    "typescript",
+    "shared-kernel"
+  ],
+  "author": "Laura Fumagalli",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/fumagallilaura/rpg-system-core/issues"
+  },
+  "homepage": "https://github.com/fumagallilaura/rpg-system-core#readme",
+  "dependencies": {
+    "typescript": "^5.6.3"
+  }
+}
