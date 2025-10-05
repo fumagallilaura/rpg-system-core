@@ -1,6 +1,6 @@
 {
   "name": "@fumagallilaura/rpg-system-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pacote com os tipos, interfaces e contratos compartilhados para o ecossistema RPG System.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
