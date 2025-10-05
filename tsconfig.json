@@ -1,7 +1,6 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "include": ["src/**/*"],
     // File Layout
     // "rootDir": "./src",
     "outDir": "./dist",
@@ -35,11 +34,11 @@
 
     // Recommended Options
     "strict": true,
-    "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-  }
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
 }
