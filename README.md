@@ -30,15 +30,68 @@ Como este é um pacote público no registro do NPM, a instalação é direta e n
     npm install @fumagallilaura/rpg-system-core
     ```
 
-2.  **Use no seu código:**
-    ```typescript
-    import { Personagem, PersonagemIniciadoEvent } from '@fumagallilaura/rpg-system-core';
+2.  **Use no seu código para garantir consistência e segurança de tipos.**
 
-    // Agora você pode usar os tipos importados
-    function processarEvento(evento: PersonagemIniciadoEvent): Personagem {
-      // ... sua lógica
-    }
-    ```
+### Exemplo Prático: Usando os Tipos em um Microsserviço
+
+Imagine que o nosso pacote `@fumagallilaura/rpg-system-core` exporta os seguintes tipos em seu arquivo `src/index.ts`:
+
+```typescript
+// DENTRO DE @fumagallilaura/rpg-system-core
+
+export enum StatusPersonagem {
+  INICIADO = 'INICIADO',
+  COMPLETO = 'COMPLETO',
+  ERRO = 'ERRO',
+}
+
+export interface Personagem {
+  id: string;
+  templateId: string;
+  nome: string;
+  nivel: number;
+  status: StatusPersonagem;
+}
+```
+
+Agora, em outro repositório, como o `rpg-system-api`, um desenvolvedor pode usar esses tipos para construir a lógica de negócio com segurança:
+
+```typescript
+// DENTRO DO MICROSSERVIÇO rpg-system-api
+
+import { Personagem, StatusPersonagem } from '@fumagallilaura/rpg-system-core';
+import { randomUUID } from 'crypto';
+
+/**
+ * Função que cria um objeto de personagem inicial antes de enviar para o Kafka.
+ * Note como os tipos importados garantem que o objeto `novoPersonagem`
+ * tenha exatamente a estrutura que todos os outros serviços esperam.
+ */
+function criarPersonagemInicial(nome: string, templateId: string): Personagem {
+  const novoPersonagem: Personagem = {
+    id: randomUUID(),
+    templateId: templateId,
+    nome: nome,
+    nivel: 1, // Todo personagem começa no nível 1
+    status: StatusPersonagem.INICIADO, // Usando o Enum importado
+  };
+
+  console.log(`Personagem '${novoPersonagem.nome}' criado com status '${novoPersonagem.status}'.`);
+
+  // Este objeto agora pode ser salvo no banco e enviado para o Kafka.
+  return novoPersonagem;
+}
+
+// Exemplo de chamada da função
+const templateIdEscolhido = 'uuid-do-template-de-guerreiro';
+const personagemGerado = criarPersonagemInicial('Grog', templateIdEscolhido);
+```
+
+#### Vantagens Demonstradas no Exemplo:
+
+* **Segurança de Tipos (Type Safety):** O TypeScript irá gerar um erro se você tentar criar um objeto `Personagem` sem o campo `id` ou com um `status` que não seja um dos valores do enum `StatusPersonagem`.
+* **Autocompletar (IntelliSense):** Seu editor de código saberá exatamente quais campos um objeto `Personagem` possui, acelerando o desenvolvimento.
+* **Consistência:** Garante que a "definição" de um Personagem é a mesma na API, no gerador de stats e no serviço de notificação.
 
 ## 🤝 Como Contribuir
 
@@ -60,22 +113,11 @@ git pull origin main
 ```
 
 #### Passo 2: Atualize a Versão do Pacote
-Use o comando `npm version` para atualizar o número da versão no `package.json` e criar um commit + tag de Git automaticamente. Escolha uma das opções a seguir, de acordo com o [Versionamento Semântico (SemVer)](https://semver.org/lang/pt-BR/):
+Use o comando `npm version` para atualizar o número da versão no `package.json` e criar um commit + tag de Git automaticamente.
 
--   **PATCH (`x.x.1`):** Para correções de bugs que não quebram a compatibilidade.
-    ```bash
-    npm version patch
-    ```
-
--   **MINOR (`x.1.x`):** Para novas funcionalidades que não quebram a compatibilidade.
-    ```bash
-    npm version minor
-    ```
-
--   **MAJOR (`2.x.x`):** Para mudanças que quebram a compatibilidade.
-    ```bash
-    npm version major
-    ```
+-   Para correções de bugs (`x.x.1`): `npm version patch`
+-   Para novas features (`x.1.x`): `npm version minor`
+-   Para mudanças que quebram a compatibilidade (`2.x.x`): `npm version major`
 
 #### Passo 3: Publique no NPM
 Com a nova versão commitada, publique o pacote no registro do NPM.
@@ -88,21 +130,15 @@ O comando `npm version` cria um commit e uma tag localmente. Você precisa envi�
 ```bash
 git push origin main --follow-tags
 ```
-*(A flag `--follow-tags` garante que a nova tag de versão seja enviada junto com o commit.)*
-
 ---
 #### **Resumo Rápido do Fluxo de Publicação:**
 ```bash
 # 1. Sincronizar
-git checkout main
-git pull origin main
-
+git checkout main && git pull origin main
 # 2. Versionar (escolha um)
 npm version patch
-
 # 3. Publicar
 npm publish
-
 # 4. Enviar para o Git
 git push origin main --follow-tags
 ```
