@@ -1,3 +1,5 @@
+![Status de Depreciação](https://img.shields.io/badge/Status-DEPRECATED-red?style=for-the-badge)
+
 # RPG System - Core Package
 
 [![NPM Version](https://img.shields.io/npm/v/@fumagallilaura/rpg-system-core.svg)](https://www.npmjs.com/package/@fumagallilaura/rpg-system-core)
